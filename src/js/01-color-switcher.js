@@ -8,18 +8,38 @@ let timerId = null;
 ref.btnStart.addEventListener('click', startRandomBcg);
 ref.btnStop.addEventListener('click', stopRandomBcg);
 
+onClassList('btnStart', 'add');
+onClassList('btnStop', 'add');
+
 function startRandomBcg() {
   timerId = setInterval(() => {
     ref.bodyBcg.style.backgroundColor = getRandomHexColor();
   }, 1000);
-  ref.btnStart.setAttribute('disabled', 'true');
-  ref.btnStop.removeAttribute('disabled');
+
+  setAttrBtn('btnStart');
+  removeAttrBtn('btnStop');
+  onClassList('btnStart', 'remove');
+  onClassList('btnStop', 'add');
 }
 
 function stopRandomBcg() {
   clearInterval(timerId);
-  ref.btnStop.setAttribute('disabled', 'true');
-  ref.btnStart.removeAttribute('disabled');
+  setAttrBtn('btnStop');
+  removeAttrBtn('btnStart');
+  onClassList('btnStop', 'remove');
+  onClassList('btnStart', 'add');
+}
+
+function setAttrBtn(btn) {
+  ref[btn].setAttribute('disabled', 'true');
+}
+
+function removeAttrBtn(btn) {
+  ref[btn].removeAttribute('disabled');
+}
+
+function onClassList(refBtn, action) {
+  ref[refBtn].classList[action]('btn-js');
 }
 
 function getRandomHexColor() {
