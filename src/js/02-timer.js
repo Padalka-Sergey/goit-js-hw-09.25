@@ -10,11 +10,7 @@ const ref = {
   secTxt: document.querySelector('[data-seconds]'),
 };
 
-// console.log(ref.daysTxt.textContent);
-
-let dateNow = null;
 let selectDate = null;
-let diff = null;
 
 const options = {
   enableTime: true,
@@ -30,7 +26,7 @@ const options = {
 flatpickr(ref.inputDate, options);
 
 function selectionDate(param) {
-  dateNow = new Date().getTime();
+  const dateNow = onDateNow();
   selectDate = param.getTime();
 
   if (selectDate < dateNow) {
@@ -38,17 +34,21 @@ function selectionDate(param) {
     return;
   }
   ref.btnStart.removeAttribute('disabled');
-  diff = selectDate - dateNow;
   ref.btnStart.addEventListener('click', onClickBtn);
 }
 
 function onClickBtn() {
   const timerId = setInterval(() => {
-    dateNow = new Date().getTime();
-    diff = selectDate - dateNow;
-    // console.log(convertMs(diff));
-    convertMs(diff);
+    const dateNow = onDateNow();
+    const diff = selectDate - dateNow;
+    const convertData = convertMs(diff);
+    onTextPaint(convertData);
+    if (diff < 1000) {
+      clearInterval(timerId);
+      ref.btnStart.removeEventListener('click', onClickBtn);
+    }
   }, 1000);
+  ref.btnStart.setAttribute('disabled', 'true');
 }
 
 function convertMs(ms) {
@@ -67,9 +67,20 @@ function convertMs(ms) {
   // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-  // return { days, hours, minutes, seconds };
-  ref.daysTxt.textContent = days;
-  ref.hoursTxt.textContent = hours;
-  ref.minsTxt.textContent = minutes;
-  ref.secTxt.textContent = seconds;
+  return { days, hours, minutes, seconds };
+}
+
+function onTextPaint({ days, hours, minutes, seconds }) {
+  ref.daysTxt.textContent = addLeadingZero(days);
+  ref.hoursTxt.textContent = addLeadingZero(hours);
+  ref.minsTxt.textContent = addLeadingZero(minutes);
+  ref.secTxt.textContent = addLeadingZero(seconds);
+}
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0');
+}
+
+function onDateNow() {
+  return new Date().getTime();
 }
