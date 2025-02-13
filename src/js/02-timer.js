@@ -43,7 +43,7 @@ const options = {
 flatpickr(ref.inputDate, options);
 
 function selectionDate(param) {
-  const dateNow = onDateNow();
+  const dateNow = Date.now();
   selectDate = param.getTime();
 
   if (selectDate < dateNow) {
@@ -58,7 +58,7 @@ function selectionDate(param) {
 
 function onClickBtn() {
   const timerId = setInterval(() => {
-    const dateNow = onDateNow();
+    const dateNow = Date.now();
     const diff = selectDate - dateNow;
     const convertData = convertMs(diff);
     onTextPaint(convertData);
@@ -98,8 +98,4 @@ function onTextPaint({ days, hours, minutes, seconds }) {
 
 function addLeadingZero(value) {
   return String(value).padStart(2, '0');
-}
-
-function onDateNow() {
-  return new Date().getTime();
 }
