@@ -44,5 +44,17 @@ export default defineConfig(({ command }) => {
         sort: 'mobile-first',
       }),
     ],
+    // ssr: {
+    //   noExternal: ['notiflix'],
+    // },
+    // optimizeDeps: {
+    //   include: ['notiflix'],
+    // },
   };
 });
+
+// export default defineConfig({
+//   optimizeDeps: {
+//     include: ['notiflix'],
+//   },
+// });
