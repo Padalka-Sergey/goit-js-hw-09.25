@@ -19,6 +19,14 @@ const ref = {
   secTxt: document.querySelector('[data-seconds]'),
 };
 
+// let getEl = selector => document.querySelector(selector);
+// getEl('[data-days]').textContent = `${days}`;
+// getEl('[data-hours]').textContent = `${hours}`;
+// getEl('[data-minutes]').textContent = `${minutes}`;
+// getEl('[data-seconds]').textContent = `${seconds}`;
+
+const DELAYINTERVAL = 1000;
+const DELAYNOTIF = 4000;
 let selectDate = null;
 
 const options = {
@@ -40,7 +48,7 @@ function selectionDate(param) {
 
   if (selectDate < dateNow) {
     Notiflix.Notify.failure('Please choose a date in the future', {
-      timeout: 4000,
+      timeout: DELAYNOTIF,
     });
     return;
   }
@@ -58,7 +66,7 @@ function onClickBtn() {
       clearInterval(timerId);
       ref.btnStart.removeEventListener('click', onClickBtn);
     }
-  }, 1000);
+  }, DELAYINTERVAL);
   ref.btnStart.setAttribute('disabled', 'true');
 }
 
