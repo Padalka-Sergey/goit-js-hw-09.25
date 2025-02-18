@@ -1,5 +1,10 @@
 const formRef = document.querySelector('.form');
 let counterPosition = null;
+const DELAYNOTIF = 3000;
+
+Notiflix.Notify.init({
+  position: 'center-center',
+});
 
 formRef.addEventListener('submit', handleSubmit);
 
@@ -14,7 +19,23 @@ function handleSubmit(e) {
     counterPosition <= amountValue;
     counterPosition += 1
   ) {
-    createPromise(counterPosition, delayValue);
+    createPromise(counterPosition, delayValue)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`,
+          {
+            timeout: DELAYNOTIF,
+          }
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`,
+          {
+            timeout: DELAYNOTIF,
+          }
+        );
+      });
 
     delayValue += stepValue;
   }
@@ -22,20 +43,14 @@ function handleSubmit(e) {
 }
 
 function createPromise(position, delay) {
-  const shouldResolve = Math.random() > 0.3;
-  setTimeout(() => {
-    if (shouldResolve) {
-      console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-    } else {
-      console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-    }
-  }, delay);
+  return new Promise((resolve, reject) => {
+    const shouldResolve = Math.random() > 0.3;
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
 }
-
-// createPromise(2, 1500)
-//   .then(({ position, delay }) => {
-//     console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//   })
-//   .catch(({ position, delay }) => {
-//     console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-//   });
